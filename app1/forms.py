@@ -1,4 +1,5 @@
 from django import forms
+from datetime import datetime
 from .models import TipoMascota, Mascota, Persona,PostMascota
 
 class TipoMascotaForm(forms.ModelForm):
@@ -38,44 +39,59 @@ class TipoMascotaForm(forms.ModelForm):
         if nombre and descripcion and nombre.strip().lower() == descripcion.strip().lower():
             raise forms.ValidationError("El nombre y la descripcion no pueden ser iguales")
         return cleaned
-    '''
-    class PostMascotaForm(form.ModelForm):
+
+
+class PostMascotaForm(forms.ModelForm):
         class Meta:
             model = PostMascota
-            fields = ['Titulo','Descripcion','Fecha','Foto']
+            fields = ['titulo','descripcion','fecha','foto']
+            
             widgets = {
-                'Titulo': forms.TextInput( attrs = {
+                'titulo': forms.TextInput( attrs = {
                     'class': 'form-control',
                     'placeholder': 'Ej. a los 4 años'
                 }),
-                'Descripcion': forms.Textarea(attrs = {
+                'descripcion': forms.Textarea(attrs = { 
                     'class': 'form-control',
                     'placeholder': 'Ej. Le inyectaron la vacuna Y',
                     'rows': 5
                 }),
-                'Fecha': forms.DateField(attrs={
+                'fecha': forms.DateInput(attrs={
                     'class': 'form-control',
                     'type': 'date'
                 }),
-                'Foto': forms.ImageField(attrs = {
-                    'class': 'form-control',
+                'foto': forms.FileInput(attrs = {
+                    'class': 'form-control', 
                     'type': 'file',
                     'id': 'formFile'
                 })
             }
 
             labels={
-                'Titulo': 'Titulo del post',
-                'Descripcion':'Descripcion',
-                'Fecha':'Fecha',
-                'Foto':'Foto'
+                'titulo': 'Titulo del post',
+                'descripcion':'Descripcion',
+                'fecha':'Fecha',
+                'foto':'Foto'
             }
-    '''
+        
+        def clean_descripcion(self):
+            descripcion = self.cleaned_data.get('nombre')
+            if len(descripcion) < 20:
+                raise forms.ValidationError("La descripción debe de tener más de 20 caracteres")
+            return descripcion.strip()
+        
+
+        def clean_fecha(self):
+            fecha = self.cleaned_data.get('fecha')
+            if fecha and fecha > datetime.today():
+                raise forms.ValidationError('La fecha no puede ser mayor a la de hoy')
+            return fecha.strip()
+
     
-    """
+"""
         =========================================================
          SECCIÓN: CREAR EL FORMULARIO PostMascotaForm
          ---------------------------------------------------------
          TODO: Crear el formulario con los campos indicados
         =========================================================
-    """
+"""
