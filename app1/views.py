@@ -178,7 +178,21 @@ def cerrarSesion(request):
 
 
 @login_required(login_url='/')
-def posts_mascota(request, idMascota):
+def posts_mascota(request, mascota_id):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
+        fecha = request.POST.get('fecha')
+        foto = request.FILES.get('foto')
+        mascota = Mascota.objects.get(id = mascota_id)
+        PostMascota.objects.create(
+            titulo = titulo,
+            descripcion = descripcion,
+            fecha = fecha,
+            foto = foto,
+            mascota = mascota
+        )
+        return HttpResponseRedirect(reverse('app1:posts_mascota', args = [mascota_id]))
     return render(request,'posts_mascota.html')
 
 

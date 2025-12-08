@@ -13,7 +13,7 @@ urlpatterns = [
     path('mascotasxtipo/<int:idTipo>',views.mascotasxtipo,name='mascotasxtipo'),
     path('detalleMascota/<int:idMascota>',views.detalleMascota,name='detalleMascota'),
     path('cerrarSesion',views.cerrarSesion,name='cerrarSesion'),
-    path('posts_mascota/<int:idMascota>',views.posts_mascota,name='posts_mascota')
+    path('posts_mascota/<int:mascota_id>',views.posts_mascota,name='posts_mascota')
 
 
 
