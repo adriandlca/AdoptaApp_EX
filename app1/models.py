@@ -36,7 +36,7 @@ class PostMascota(models.Model):
     mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
     titulo = models.CharField(max_length=64,null=True,blank=True)
     descripcion = models.TextField(max_length=256,null=True,blank=True)
-    fecha = models.DateField(auto_now_add = True)
+    fecha = models.DateField()
     foto = models.ImageField(upload_to='mascotas/')
 
 

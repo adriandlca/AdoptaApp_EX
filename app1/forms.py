@@ -1,5 +1,5 @@
 from django import forms
-from .models import TipoMascota, Mascota, Persona
+from .models import TipoMascota, Mascota, Persona,PostMascota
 
 class TipoMascotaForm(forms.ModelForm):
     class Meta:
@@ -38,9 +38,39 @@ class TipoMascotaForm(forms.ModelForm):
         if nombre and descripcion and nombre.strip().lower() == descripcion.strip().lower():
             raise forms.ValidationError("El nombre y la descripcion no pueden ser iguales")
         return cleaned
-    
-    
-    
+    '''
+    class PostMascotaForm(form.ModelForm):
+        class Meta:
+            model = PostMascota
+            fields = ['Titulo','Descripcion','Fecha','Foto']
+            widgets = {
+                'Titulo': forms.TextInput( attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Ej. a los 4 años'
+                }),
+                'Descripcion': forms.Textarea(attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Ej. Le inyectaron la vacuna Y',
+                    'rows': 5
+                }),
+                'Fecha': forms.DateField(attrs={
+                    'class': 'form-control',
+                    'type': 'date'
+                }),
+                'Foto': forms.ImageField(attrs = {
+                    'class': 'form-control',
+                    'type': 'file',
+                    'id': 'formFile'
+                })
+            }
+
+            labels={
+                'Titulo': 'Titulo del post',
+                'Descripcion':'Descripcion',
+                'Fecha':'Fecha',
+                'Foto':'Foto'
+            }
+    '''
     
     """
         =========================================================
