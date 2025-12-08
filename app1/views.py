@@ -179,6 +179,8 @@ def cerrarSesion(request):
 
 @login_required(login_url='/')
 def posts_mascota(request, mascota_id):
+    posts = PostMascota.objects.all()
+    form = None
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
         descripcion = request.POST.get('descripcion')
@@ -193,7 +195,11 @@ def posts_mascota(request, mascota_id):
             mascota = mascota
         )
         return HttpResponseRedirect(reverse('app1:posts_mascota', args = [mascota_id]))
-    return render(request,'posts_mascota.html')
+    return render(request,'posts_mascota.html',{
+        'mascota': mascota,
+        'form': form,
+        'posts':  posts
+    })
 
 
 """
