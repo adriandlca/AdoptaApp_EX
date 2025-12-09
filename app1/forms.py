@@ -1,5 +1,5 @@
 from django import forms
-from datetime import datetime
+from datetime import datetime,date
 from .models import TipoMascota, Mascota, Persona,PostMascota
 
 class TipoMascotaForm(forms.ModelForm):
@@ -75,18 +75,18 @@ class PostMascotaForm(forms.ModelForm):
             }
         
         def clean_descripcion(self):
-            descripcion = self.cleaned_data.get('nombre')
-            if len(descripcion) < 20:
+            descripcion = self.cleaned_data.get('descripcion')
+            if not descripcion or len(descripcion) < 20:
                 raise forms.ValidationError("La descripción debe de tener más de 20 caracteres")
             return descripcion.strip()
         
 
         def clean_fecha(self):
             fecha = self.cleaned_data.get('fecha')
-            if fecha and fecha > datetime.today():
+            hoy = date.today() 
+            if fecha and fecha > hoy:
                 raise forms.ValidationError('La fecha no puede ser mayor a la de hoy')
-            return fecha.strip()
-
+            return fecha
     
 """
         =========================================================
