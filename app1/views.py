@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login,logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .forms import TipoMascotaForm
+from .forms import TipoMascotaForm, PostMascotaForm
 
 # Create your views here.
 def ingreso(request):
@@ -176,17 +176,39 @@ def cerrarSesion(request):
     logout(request)
     return HttpResponseRedirect(reverse('app1:ingreso'))
 
-
 @login_required(login_url='/')
 def posts_mascota(request, mascota_id):
-    posts = PostMascota.objects.all()
+    mascota = Mascota.objects.get(id=mascota_id)
+    posts = PostMascota.objects.filter(mascota_id=mascota_id)
+
+    if request.method == 'POST':
+        form = PostMascotaForm(request.POST, request.FILES)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.mascota = mascota
+            post.save()
+            return HttpResponseRedirect(reverse('app1:posts_mascota', args=[mascota_id]))
+    else:
+        form = PostMascotaForm()
+    
+    return render(request,'posts_mascota.html', {
+        'mascota': mascota,
+        'form': form,
+        'posts': posts
+    })
+
+
+'''
+@login_required(login_url='/')
+def posts_mascota(request, mascota_id):
+    mascota = Mascota.objects.get(id = mascota_id)
+    posts = PostMascota.objects.filter(mascota=mascota)
     form = None
     if request.method == 'POST':
         titulo = request.POST.get('titulo')
         descripcion = request.POST.get('descripcion')
-        fecha = request.POST.get('fecha')
-        foto = request.FILES.get('foto')
-        mascota = Mascota.objects.get(id = mascota_id)
+        fecha = request.POST.get('fecha') or None
+        foto = request.FILES.get('foto')   
         PostMascota.objects.create(
             titulo = titulo,
             descripcion = descripcion,
@@ -200,7 +222,7 @@ def posts_mascota(request, mascota_id):
         'form': form,
         'posts':  posts
     })
-
+'''
 
 """
     =========================================================
