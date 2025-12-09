@@ -8,6 +8,7 @@ from django.contrib.auth import login,logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .forms import TipoMascotaForm, PostMascotaForm
+import os
 
 # Create your views here.
 def ingreso(request):
@@ -190,13 +191,24 @@ def posts_mascota(request, mascota_id):
             return HttpResponseRedirect(reverse('app1:posts_mascota', args=[mascota_id]))
     else:
         form = PostMascotaForm()
-    
+
     return render(request,'posts_mascota.html', {
         'mascota': mascota,
         'form': form,
         'posts': posts
     })
 
+
+@login_required(login_url='/')
+def eliminarPost(request, post_id):
+    objPost = PostMascota.objects.get(id=post_id)
+    mascota_id = objPost.mascota.id
+    if objPost.foto:
+        if os.path.isfile(objPost.foto.path):
+            os.remove(objPost.foto.path)
+
+    objPost.delete()
+    return HttpResponseRedirect(reverse('app1:posts_mascota', args=[mascota_id]))
 
 '''
 @login_required(login_url='/')
